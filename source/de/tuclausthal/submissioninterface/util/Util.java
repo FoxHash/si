@@ -40,6 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import java.util.UUID;
 
 import javax.servlet.http.Part;
 
@@ -479,23 +480,30 @@ public final class Util {
 			uploadedFile = File.createTempFile("upload", null, path);
 		}
 		copyInputStreamAndClose(item.getInputStream(), new BufferedOutputStream(new FileOutputStream(uploadedFile)));
+		relocateJavaFile(path, uploadedFile, fileName);
+	}
+
+	public static void relocateJavaFile(File destDir, File possibleJavaFile, String fileName) throws IOException {
 		// extract defined package in java-files
 		if (fileName.toLowerCase().endsWith(".java")) {
 			NormalizerIf stripComments = new StripCommentsNormalizer();
-			StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(uploadedFile));
+			StringBuffer javaFileContents = stripComments.normalize(Util.loadFile(possibleJavaFile));
 			Pattern packagePattern = Pattern.compile(".*package\\s+([a-zA-Z$]([a-zA-Z0-9_$]|\\.[a-zA-Z0-9_$])*)\\s*;.*", Pattern.DOTALL);
 			Matcher packageMatcher = packagePattern.matcher(javaFileContents);
-			File destFile = new File(path, fileName);
+			File destFile = new File(destDir, fileName);
 			if (packageMatcher.matches()) {
 				String packageName = packageMatcher.group(1).replace(".", System.getProperty("file.separator"));
-				File packageDirectory = new File(path, packageName);
+				File packageDirectory = new File(destDir, packageName);
 				packageDirectory.mkdirs();
 				destFile = new File(packageDirectory, fileName);
 			}
 			if (destFile.exists() && destFile.isFile()) {
 				destFile.delete();
 			}
-			uploadedFile.renameTo(destFile);
+			if (!possibleJavaFile.renameTo(destFile)) { // renameTo does not work across different filesystems
+				Util.recursiveCopy(possibleJavaFile, destFile);
+				possibleJavaFile.delete();
+			}
 		}
 	}
 
@@ -505,4 +513,27 @@ public final class Util {
 			filename.replace(lastDot, filename.length(), filename.subSequence(lastDot, filename.length()).toString().toLowerCase());
 		}
 	}
+	
+	 /**
+     * Utility method to get file name from HTTP header content-disposition
+     */
+	public static String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        System.out.println("content-disposition header= "+contentDisp);
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length()-1);
+            }
+        }
+        return "";
+    }
+	
+	//generates UUID for a task
+    public static String generateUUID (){
+	    UUID uuid = UUID.randomUUID();
+	    String randomUUIDString = uuid.toString();
+        
+	    return randomUUIDString;
+	}	
 }

@@ -62,7 +62,7 @@ public class JavaSyntaxTest extends TempDirTest {
 		return (compiles == 0);
 	}
 
-	final protected void getRecursivelyAllJavaFiles(File path, List<String> javaFiles) {
+	static final public void getRecursivelyAllJavaFiles(File path, List<String> javaFiles) {
 		for (File file : path.listFiles()) {
 			if (file.isFile()) {
 				if (file.getName().toLowerCase().endsWith(".java")) {

@@ -72,6 +72,7 @@ public class ShowSubmissionView extends HttpServlet {
 
 		Submission submission = (Submission) request.getAttribute("submission");
 		List<String> submittedFiles = (List<String>) request.getAttribute("submittedFiles");
+		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 		Task task = submission.getTask();
 
 		template.printTemplateHeader(submission);
@@ -261,7 +262,7 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</tr>");
 			out.println("</table><p>");
 		}
-
+		
 		if (submission.getTestResults().size() > 0) {
 			out.println("<h2>Tests: <a href=\"#\" onclick=\"$('#tests').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<ul id=tests>");
@@ -312,6 +313,16 @@ public class ShowSubmissionView extends HttpServlet {
 			out.println("</ul>");
 		}
 
+		if (modelSolutionFiles.size() > 0){
+			out.println("<h2>Musterlösung:</h2>");
+			out.println("<ul>");
+			for (String file : modelSolutionFiles) {
+				file = file.replace(System.getProperty("file.separator"), "/");
+				out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a></li>");
+			}
+			out.println("</ul>");
+		}
+		
 		if (submittedFiles.size() > 0) {
 			out.println("<h2>Dateien: <a href=\"#\" onclick=\"$('#files').toggle(); return false;\">(+/-)</a></h2>");
 			out.println("<div id=files class=mid>");

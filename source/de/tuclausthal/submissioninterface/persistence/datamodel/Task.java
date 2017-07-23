@@ -48,6 +48,8 @@ import de.tuclausthal.submissioninterface.dynamictasks.DynamicTaskStrategieIf;
 @Entity
 @Table(name = "tasks")
 public class Task implements Serializable {
+	private String uuid;
+	private String parentuuid;
 	private int taskid;
 	private String title = "";
 	private int maxSubmitters = 1;
@@ -74,6 +76,8 @@ public class Task implements Serializable {
 	public Task() {}
 
 	/**
+	 * @param uuid
+	 * @param parentuuid
 	 * @param title
 	 * @param maxPoints
 	 * @param minPointStep
@@ -92,7 +96,9 @@ public class Task implements Serializable {
 	 * @param dynamicTask 
 	 * @param showPointsDate 
 	 */
-	public Task(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask, Date showPointsDate) {
+	public Task(String uuid, String parentuuid, String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask, Date showPointsDate) {
+		this.uuid = uuid;
+		this.parentuuid = parentuuid;
 		this.title = title;
 		this.maxPoints = maxPoints;
 		this.minPointStep = minPointStep;
@@ -110,6 +116,34 @@ public class Task implements Serializable {
 		this.allowSubmittersAcrossGroups = allowSubmittersAcrossGroups;
 		this.dynamicTask = dynamicTask;
 		this.showPoints = showPointsDate;
+	}
+
+	/**
+	 * @param uuid the UUID to set
+	 */
+	public void setUUID(String uuid) {
+        this.uuid = uuid; 
+	}
+	
+	/**
+	 * @return the UUID
+	 */
+	public String getUUID() {
+		return uuid;
+	}
+	
+	/**
+	 * @param parentuuid the parentUUID to set
+	 */
+	public void setParentUUID(String parentuuid) {
+        this.parentuuid = parentuuid; 
+	}
+	
+	/**
+	 * @return the parentUUID
+	 */
+	public String getParentUUID() {
+		return parentuuid;
 	}
 
 	/**

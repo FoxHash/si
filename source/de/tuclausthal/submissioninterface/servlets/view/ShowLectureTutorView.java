@@ -116,6 +116,7 @@ public class ShowLectureTutorView extends HttpServlet {
 			out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTaskGroup") + "\">Neue Aufgabengruppe</a></div>");
 			if (lecture.getTaskGroups().size() > 0) {
 				out.println("<p><div class=mid><a href=\"" + response.encodeURL("TaskManager?lecture=" + lecture.getId() + "&amp;action=newTask") + "\">Neue Aufgabe</a></div>");
+				out.println("<p><div class=mid><a href=\"" + response.encodeURL("ImportTask?lecture=" + lecture.getId()) + "\">Aufgabe importieren</a></div>");
 			}
 		}
 

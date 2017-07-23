@@ -167,7 +167,7 @@ public class ShowFile extends HttpServlet {
 		return true;
 	}
 
-	private boolean isPlainTextFile(String lowercaseFilename) {
+	public static boolean isPlainTextFile(String lowercaseFilename) {
 		for (String extension : plainTextFiles) {
 			if (lowercaseFilename.endsWith("." + extension)) {
 				return true;

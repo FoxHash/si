@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 - 2013 Sven Strickroth <email@cs-ware.de>
+ * Copyright 2009 - 2014 Sven Strickroth <email@cs-ware.de>
  * 
  * This file is part of the SubmissionInterface.
  * 
@@ -54,6 +54,7 @@ public class TaskManagerView extends HttpServlet {
 		Task task = (Task) request.getAttribute("task");
 		Lecture lecture = task.getTaskGroup().getLecture();
 		List<String> advisorFiles = (List<String>) request.getAttribute("advisorFiles");
+		List<String> modelSolutionFiles = (List<String>) request.getAttribute("modelSolutionFiles");
 
 		template.addJQuery();
 		template.addKeepAlive();
@@ -248,6 +249,21 @@ public class TaskManagerView extends HttpServlet {
 			}
 			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadTaskFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
 			out.println("<p>Bitte wählen Sie eine Datei aus, die Sie den Studenten zur Verfügung stellen möchten:</p>");
+			out.println("<INPUT TYPE=file NAME=file required=required>");
+			out.println("<INPUT TYPE=submit VALUE=upload>");
+			out.println("</FORM>");
+
+			out.println("<h2>Musterlösung hinterlegen</h2>");
+			if (modelSolutionFiles.size() > 0) {
+				out.println("<ul>");
+				for (String file : modelSolutionFiles) {
+					file = file.replace(System.getProperty("file.separator"), "/");
+					out.println("<li><a href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?taskid=" + task.getTaskid()) + "\">Download " + Util.escapeHTML(file) + "</a> (<a onclick=\"return confirmLink('Wirklich löschen?')\" href=\"" + response.encodeURL("DownloadModelSolutionFile/" + file + "?action=delete&taskid=" + task.getTaskid()) + "\">del</a>)</li>");
+				}
+				out.println("</ul>");
+			}
+			out.println("<FORM class=mid ENCTYPE=\"multipart/form-data\" method=POST action=\"" + response.encodeURL("?action=uploadModelSolutionFile&amp;lecture=" + task.getTaskGroup().getLecture().getId() + "&amp;taskid=" + task.getTaskid()) + "\">");
+			out.println("<p>Bitte wählen Sie eine Datei aus, die zur Musterlösung gehört bzw. diese darstellt:</p>");
 			out.println("<INPUT TYPE=file NAME=file required=required>");
 			out.println("<INPUT TYPE=submit VALUE=upload>");
 			out.println("</FORM>");

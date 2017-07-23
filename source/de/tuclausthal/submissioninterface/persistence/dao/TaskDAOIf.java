@@ -30,6 +30,8 @@ import de.tuclausthal.submissioninterface.persistence.datamodel.TaskGroup;
 public interface TaskDAOIf {
 	/**
 	 * Creates and stores a new task on the DB with given attribute-values
+	 * @param uuid the uuid of the task
+	 * @param parentuuid the parentuuid of the task
 	 * @param title the title of the task
 	 * @param maxPoints the maximum number of points
 	 * @param minPointStep 
@@ -49,7 +51,7 @@ public interface TaskDAOIf {
 	 * @param showPointsDate if != null show points automatically after that date, otherwise manuel intervention is required
 	 * @return a new Task
 	 */
-	public Task newTask(String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask, Date showPointsDate);
+	public Task newTask(String uuid, String parentuuid, String title, int maxPoints, int minPointStep, Date start, Date deadline, String description, TaskGroup taskGroup, Date showPoints, String filenameRegexp, String archiveFilenameRegexp, boolean showTextArea, String featuredFiles, boolean tutorsCanUploadFiles, int maxSubmitters, boolean allowSubmittersAcrossGroups, String dynamicTask, Date showPointsDate);
 
 	/**
 	 * Fetch a task based on it's id
